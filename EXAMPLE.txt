@@ -1,0 +1,61 @@
+> (define exp
+    '(letrec ([ccstack '()]
+              [fail (lambda () 
+                      (if (null? ccstack)
+                          (raise 'no-solution)
+                          (let ([next-cc (car ccstack)])
+                            (begin
+                              (set! ccstack (cdr ccstack))
+                              (next-cc next-cc)))))]
+              [assert (lambda (b) (if b '#t (fail)))]
+              [amb (lambda (lst) (let ([cc (call/cc (lambda (u) (u u)))])
+                                   (if (null? lst)
+                                       (fail)
+                                       (let ([head (car lst)])
+                                         (begin
+                                           (set! lst (cdr lst))
+                                           (set! ccstack (cons cc ccstack))
+                                           head)))))])
+  
+       (let ([a (amb `(2 3 4 5))]
+             [b (amb `(2 3 4 5 6))]
+             [c (amb `(2 3 4 5))])
+         (begin
+      
+           (assert (= (+ (* a a) (* b b)) (* c c)))
+
+           `(solution ,a ,b ,c)))))
+> (eval-llvm (proc->llvm (closure-convert (cps-convert (anf-convert (alphatize (assignment-convert (simplify-ir (desugar (top-level exp))))))))))
+header.cpp:132:21: warning: format specifies type 'unsigned long' but the argument has type 'u64' (aka 'unsigned long long') [-Wformat]
+    printf("%lu\n", i);
+            ~~~     ^
+            %llu
+header.cpp:276:55: warning: format specifies type 'unsigned long' but the argument has type 'u64' (aka 'unsigned long long') [-Wformat]
+        printf("(print.. v); unrecognized value %lu", v);
+                                                ~~~   ^
+                                                %llu
+header.cpp:333:53: warning: format specifies type 'unsigned long' but the argument has type 'u64' (aka 'unsigned long long') [-Wformat]
+        printf("(print v); unrecognized value %lu", v);
+                                              ~~~   ^
+                                              %llu
+3 warnings generated.
+'(solution 3 4 5)
+
+
+=======================
+
+> (define exp
+    '(let ([s (string #\y #\e #\r #\i #\n)])
+  (cons s (substring (apply string (string->list (string-append " marry" " me" " please"))) 0 10))))
+> (eval-llvm (proc->llvm (closure-convert (cps-convert (anf-convert (alphatize (assignment-convert (simplify-ir (desugar (top-level exp))))))))))
+'("yerin" . " marry me ")
+
+=======================
+
+> (define exp
+    '(begin (define (f x y) (+ x y 10))
+
+            (let ([z (f 2 3)])
+              ("function" f z))))
+> (eval-llvm (proc->llvm (closure-convert (cps-convert (anf-convert (alphatize (assignment-convert (simplify-ir (desugar (top-level exp))))))))))
+"Error: Non-Function Value Applied"

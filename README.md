@@ -22,9 +22,12 @@ The compiler has the following phases:
 
 **9. LLVM:** With our IR now being in SSA, with continuation passing style, we can use the LLVM backend to compile our IR into executable bytecode. This phase takes the procedure output from the previous phase, and outputs strings of LLVM code that will produce an equivalent LLVM IR. This LLVM string is then concatenated to a LLVM compiled C++ header file (which contains some helper functions for things like primative operations and printing), and then compiled via clang++ into an executable bytecode file (default named bin).
 
-Tests:
+Examples of some of manual runs of the compiler (in Racket, from the tests.rkt file) can be found in EXAMPLE.txt. The inputs are taken from various of the test files.
+
+**Tests:**
 The tests/ folder contains tests for the project. It includes the basic provided public tests, tests for strings, and tests for the error messages. Currently, tests.rkt only looks for tests inside of the public folder with .scm or .err file extensions. To run all the tests:
 racket tests.rkt all 
+
 
 ---
 
@@ -91,6 +94,9 @@ Since we use a halt to "throw" these errors and end the program, if the program 
 ##### Testing:
 To test we hardcode the expected string for each test, and matching on the test name, we check to see if the test is correct. We only do this for test files that end in .err. Things got a bit (very) hacky with the error messages that return the names of llvm functions. We include 2 tests for each of the errors above, each ending with .err.
 
+##### Other Errors:
+Some other errors that are still not being caught properly are invalid argument types being passed into user defined functions, exceeding the memory usage cap, and use if a not yet defined variable inside of a letrec/letrec\*
+
 ---
 
 ### New Feature - Strings:
@@ -115,7 +121,7 @@ Ex. (string #\a #\b #\c) => (string-append (string #\a) (string #\b) (string #\c
 
 * Added support for the prim substring. Added the prim_substring function in header.cpp that takes in one tagged string parameter, a second tagged integer parameter, and a third tagged integer parameter. It returns a tagged string, of the sub string starting from the second integer parameter argument, and ending before the third integer parameter argument. It does not support an optional third argument like in Racket, because I ran out of time.
 
-Like the other primatives, these new primatives can be used with apply.
+Like the other primatives, these new primatives can be used with apply, and can also do type checking to make sure the passed in arguments are of the expected type(s).
 
 ---
 
