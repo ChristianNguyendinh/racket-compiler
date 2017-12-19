@@ -1,0 +1,3 @@
+
+(let ([fun (lambda (x) x)])
+	(+ 1 (fun)))

@@ -1,0 +1,3 @@
+
+(define x ((lambda () (+ 1 2)))) 
+(x)

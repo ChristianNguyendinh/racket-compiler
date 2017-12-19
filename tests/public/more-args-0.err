@@ -1,0 +1,4 @@
+
+(define f (lambda () 1))
+
+(f 1)

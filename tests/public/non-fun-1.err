@@ -1,0 +1,5 @@
+
+(define (f x y) (+ x y 10))
+
+(let ([z (f 2 3)])
+	("function" f z))
