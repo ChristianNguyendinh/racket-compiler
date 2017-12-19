@@ -2,3 +2,4 @@
 bin
 compiled/
 .DS_Store
+combined.ll

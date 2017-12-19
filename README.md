@@ -1,7 +1,7 @@
 # CMSC 430 Racket Compiler
 
 ### Project Description:
-This project is the combined result of multiple projects from the Fall 2017 CMSC430 UMD course, taught by Professor Thomas Gilray. The combined result is a compiler that will take scheme code, and compile it to an executable binary. 
+This [final project](https://www.cs.umd.edu/class/fall2017/cmsc430/final.html) is the combined result of multiple projects from the Fall 2017 [CMSC430](https://www.cs.umd.edu/class/fall2017/cmsc430/) UMD course, taught by Professor Thomas Gilray. The combined result is a compiler that will take scheme code, and compile it to an executable binary. 
 The compiler has the following phases:
 
 **1. Top level:** Adds explicit begins, quotes datums, desugars defines, quasiquotes/unquotes, and match statements
@@ -21,6 +21,10 @@ The compiler has the following phases:
 **8. Closure Convert:** Removes all lambdas, replaces them with closures, with appropriate environment references, lifts variable references to let bindings, and removes variadic lambdas - by having all lambda take in one parameter of a list of arguments, then extracting the original expected arguments from that list. The phase outputs a list of procedure abstracts, with a minimal language
 
 **9. LLVM:** With our IR now being in SSA, with continuation passing style, we can use the LLVM backend to compile our IR into executable bytecode. This phase takes the procedure output from the previous phase, and outputs strings of LLVM code that will produce an equivalent LLVM IR. This LLVM string is then concatenated to a LLVM compiled C++ header file (which contains some helper functions for things like primative operations and printing), and then compiled via clang++ into an executable bytecode file (default named bin).
+
+Tests:
+The tests/ folder contains tests for the project. It includes the basic provided public tests, tests for strings, and tests for the error messages. Currently, tests.rkt only looks for tests inside of the public folder with .scm or .err file extensions. To run all the tests:
+racket tests.rkt all 
 
 ---
 
@@ -123,7 +127,7 @@ Implementation of the Boehm Garbage Collector has been omitted, and left as a ex
 ### University of Maryland Academic Integrity Declaration:
 > I, Christian Nguyendinh, pledge on my honor that I have not given or received any unauthorized assistance on this assignment.
 
-Code for this project was taken from Professor Thomas Gilray's [assignment reference solutions](https://www.cs.umd.edu/class/fall2017/cmsc430/)
+Code for this project was taken from Professor Thomas Gilray's [assignment reference solutions](https://www.cs.umd.edu/class/fall2017/cmsc430/).
 Considering putting all this together is our final exam project, I wanted the extra safety and insurance that the code for each part that I was building off of was worked correctly.
 In the future (after the project is graded), I may change compiler passes to my solutions instead of the reference solutions.
 
